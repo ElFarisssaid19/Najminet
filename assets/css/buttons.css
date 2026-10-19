@@ -1,0 +1,222 @@
+/**
+ * assets/css/buttons.css
+ * --------------------------------------------------------------------
+ * NajmiNet's one button system, used by every page.
+ *
+ * Prefixed (nn-) so it never fights Bootstrap's .btn on the pages that
+ * load Bootstrap. Markup:
+ *   <button class="nn-btn nn-btn--primary">Save invoice</button>
+ *   <a class="nn-btn nn-btn--secondary" href="…"><span class="nn-icon nn-icon--plus" aria-hidden="true"></span>New invoice</a>
+ *
+ * Variants  primary (one per form or section) · secondary · ghost (link-
+ *           like) · danger (destructive, always with a confirmation) ·
+ *           icon (icon-only square; combine with a colour variant and
+ *           give it an aria-label).
+ * Sizes     sm · md (default) · lg — every size is at least 44×44px.
+ * Modifiers --block (full width) · .nn-actions (a group of buttons:
+ *           wraps on desktop, stacks full width below 640px, primary
+ *           first).
+ * States    hover (real mouse only) · focus-visible ring · active ·
+ *           disabled / aria-disabled · .is-loading (set by buttons.js
+ *           when a form is submitted).
+ *
+ * Icons: .nn-icon.nn-icon--{name}, drawn with currentColor through a CSS
+ * mask, so they never depend on an icon font. Names: arrow-left, arrow-right, arrow-up, plus, trash, pen, download, upload, print, send, log-in, log-out, user-plus, eye, eye-slash, rotate, undo, check, close, menu, external, chevron-left, chevron-right, home, key.
+ * The shapes are Font Awesome Free 6.5.1 solid icons
+ * (https://fontawesome.com/license/free, icons CC BY 4.0).
+ * --------------------------------------------------------------------
+ */
+.nn-btn{
+  --nn-btn-h: 44px;
+  --nn-btn-px: 18px;
+  --nn-btn-fs: .9rem;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--nn-btn-h);
+  min-width: 44px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 var(--nn-btn-px);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font: 600 var(--nn-btn-fs)/1.2 "Sora", system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease, color .15s ease, opacity .15s ease;
+}
+.nn-btn:focus{ outline: none; }
+/* Two-tone focus ring: a light outline with a dark halo between it and the
+   button, so one of the two always stands out (3:1+) on any surface. */
+.nn-btn:focus-visible{ outline: 2px solid #c4b5fd; outline-offset: 2px; box-shadow: 0 0 0 2px #120d2b; }
+.nn-btn:active:not([disabled]):not([aria-disabled="true"]){ transform: translateY(1px); }
+
+/* ---------- Variants ---------- */
+.nn-btn--primary,
+.nn-btn--primary:visited{
+  background: linear-gradient(135deg, #4361ee, #6d4ae8);
+  color: #fff;
+  box-shadow: 0 10px 24px -12px rgba(83,79,232,.7);
+}
+.nn-btn--secondary,
+.nn-btn--secondary:visited{
+  background: rgba(255,255,255,.07);
+  border-color: rgba(255,255,255,.22);
+  color: #f4f5fb;
+}
+.nn-btn--ghost,
+.nn-btn--ghost:visited{
+  background: transparent;
+  color: #c4b5fd;
+}
+.nn-btn--danger,
+.nn-btn--danger:visited{
+  background: rgba(210,51,69,.16);
+  border-color: rgba(239,90,111,.45);
+  color: #ffb4bd;
+}
+@media (hover: hover){
+  .nn-btn--primary:hover{ background: linear-gradient(135deg, #3a57e0, #6240dc); color: #fff; box-shadow: 0 14px 30px -12px rgba(83,79,232,.85); }
+  .nn-btn--secondary:hover{ background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.34); color: #fff; }
+  .nn-btn--ghost:hover{ background: rgba(196,181,253,.1); color: #ddd6fe; }
+  .nn-btn--danger:hover{ background: rgba(210,51,69,.26); border-color: rgba(239,90,111,.65); color: #ffd0d6; }
+}
+.nn-btn--primary:active{ background: linear-gradient(135deg, #3450cf, #5838cc); color: #fff; }
+.nn-btn--secondary:active{ background: rgba(255,255,255,.16); color: #fff; }
+.nn-btn--ghost:active{ background: rgba(196,181,253,.16); color: #ede9fe; }
+.nn-btn--danger:active{ background: rgba(210,51,69,.34); color: #ffe1e5; }
+
+/* On a brand-coloured panel (.on-brand: the purple auth panels, the
+   landing CTA banner) white text can't reach AA on the gradient, so:
+   primary is solid white with dark text, secondary a dark translucent
+   surface with white text. */
+.on-brand .nn-btn--primary,
+.on-brand .nn-btn--primary:visited{ background: #fff; border-color: #fff; color: #3b2a8f; box-shadow: 0 10px 24px -12px rgba(20,10,60,.55); }
+.on-brand .nn-btn--secondary,
+.on-brand .nn-btn--secondary:visited{ background: rgba(20,12,60,.42); border-color: rgba(255,255,255,.55); color: #fff; }
+@media (hover: hover){
+  .on-brand .nn-btn--primary:hover{ background: #ede9fe; border-color: #ede9fe; color: #2e1f78; }
+  .on-brand .nn-btn--secondary:hover{ background: rgba(20,12,60,.58); border-color: #fff; color: #fff; }
+}
+.on-brand .nn-btn--primary:active{ background: #ddd6fe; color: #2e1f78; }
+.on-brand .nn-btn--secondary:active{ background: rgba(20,12,60,.66); color: #fff; }
+.on-brand .nn-btn:focus-visible{ outline-color: #fff; box-shadow: 0 0 0 2px #1e1352; }
+
+/* Icon-only: a 44px square. Combine with a colour variant. */
+.nn-btn--icon{ --nn-btn-px: 0; width: 44px; padding: 0; flex: 0 0 44px; }
+.nn-btn--icon .nn-icon{ width: 1.15rem; height: 1.15rem; }
+
+/* ---------- Sizes (all at least 44px tall) ---------- */
+.nn-btn--sm{ --nn-btn-px: 14px; --nn-btn-fs: .84rem; }
+.nn-btn--lg{ --nn-btn-h: 52px; --nn-btn-px: 26px; --nn-btn-fs: 1rem; }
+.nn-btn--block{ display: flex; width: 100%; }
+
+/* ---------- Disabled and loading ---------- */
+.nn-btn[disabled],
+.nn-btn[aria-disabled="true"]{ opacity: .55; cursor: not-allowed; box-shadow: none; transform: none; }
+a.nn-btn[aria-disabled="true"]{ pointer-events: none; }
+.nn-btn.is-loading{ cursor: progress; opacity: .85; }
+.nn-btn.is-loading .nn-icon{ display: none; }
+.nn-btn.is-loading::before{
+  content: "";
+  width: 1em; height: 1em; flex: 0 0 auto;
+  border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%;
+  animation: nn-spin .7s linear infinite;
+}
+@keyframes nn-spin{ to{ transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce){
+  .nn-btn{ transition: none; }
+  .nn-btn:active:not([disabled]){ transform: none; }
+  .nn-btn.is-loading::before{ animation-duration: 2s; }
+}
+
+/* ---------- Icons ---------- */
+.nn-icon{
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 1.1em;
+  height: 1.1em;
+  background-color: currentColor;
+  -webkit-mask: var(--nn-icon) center / contain no-repeat;
+  mask: var(--nn-icon) center / contain no-repeat;
+}
+.nn-icon--arrow-left{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'><path d='M9 244Q0 254 0 267Q0 280 9 290L169 450Q179 459 192 459Q205 459 215 450Q224 440 224 427Q224 414 215 404L109 299H416Q430 299 439 290Q448 281 448 267Q448 253 439 244Q430 235 416 235H109L215 130Q224 120 224 107Q224 94 215 84Q205 75 192 75Q179 75 169 84L9 244Z'/></svg>"); }
+.nn-icon--arrow-right{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'><path d='M439 290Q448 280 448 267Q448 254 439 244L279 84Q269 75 256 75Q243 75 233 84Q224 94 224 107Q224 120 233 130L339 235H32Q18 235 9 244Q0 253 0 267Q0 281 9 290Q18 299 32 299H339L233 404Q224 414 224 427Q224 440 233 450Q243 459 256 459Q269 459 279 450L439 290Z'/></svg>"); }
+.nn-icon--arrow-up{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'><path d='M215 52Q205 43 192 43Q179 43 169 52L9 212Q0 222 0 235Q0 248 9 258Q19 267 32 267Q45 267 55 258L160 152V459Q160 473 169 482Q178 491 192 491Q206 491 215 482Q224 473 224 459V152L329 258Q339 267 352 267Q365 267 375 258Q384 248 384 235Q384 222 375 212L215 52Z'/></svg>"); }
+.nn-icon--plus{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'><path d='M256 91Q256 77 247 68Q238 59 224 59Q210 59 201 68Q192 77 192 91V235H48Q34 235 25 244Q16 253 16 267Q16 281 25 290Q34 299 48 299H192V443Q192 457 201 466Q210 475 224 475Q238 475 247 466Q256 457 256 443V299H400Q414 299 423 290Q432 281 432 267Q432 253 423 244Q414 235 400 235H256V91Z'/></svg>"); }
+.nn-icon--trash{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'><path d='M135 29Q144 12 164 11H284Q304 12 313 29L320 43H416Q430 43 439 52Q448 61 448 75Q448 89 439 98Q430 107 416 107H32Q18 107 9 98Q0 89 0 75Q0 61 9 52Q18 43 32 43H128L135 29ZM32 139H416H32H416V459Q415 486 397 504Q379 522 352 523H96Q69 522 51 504Q33 486 32 459V139ZM128 203Q113 204 112 219V443Q113 458 128 459Q143 458 144 443V219Q143 204 128 203ZM224 203Q209 204 208 219V443Q209 458 224 459Q239 458 240 443V219Q239 204 224 203ZM320 203Q305 204 304 219V443Q305 458 320 459Q335 458 336 443V219Q335 204 320 203Z'/></svg>"); }
+.nn-icon--pen{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M363 30 314 79 363 30 314 79 444 209 493 160Q511 141 511 115Q511 90 493 70L453 30Q434 12 408 12Q383 12 363 30ZM292 101 59 335 292 101 59 335Q43 350 36 372L1 492Q-3 506 7 516Q17 526 31 522L151 487Q172 480 188 465L422 231L292 101Z'/></svg>"); }
+.nn-icon--download{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M288 43Q288 29 279 20Q270 11 256 11Q242 11 233 20Q224 29 224 43V286L151 212Q141 203 128 203Q115 203 105 212Q96 222 96 235Q96 248 105 258L233 386Q243 395 256 395Q269 395 279 386L407 258Q416 248 416 235Q416 222 407 212Q397 203 384 203Q371 203 361 212L288 286V43ZM64 363Q37 364 19 382Q1 400 0 427V459Q1 486 19 504Q37 522 64 523H448Q475 522 493 504Q511 486 512 459V427Q511 400 493 382Q475 364 448 363H347L301 408Q281 427 256 427Q230 427 211 408L166 363H64ZM432 419Q454 421 456 443Q454 465 432 467Q410 465 408 443Q410 421 432 419Z'/></svg>"); }
+.nn-icon--upload{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M288 120V363V120V363Q288 377 279 386Q270 395 256 395Q242 395 233 386Q224 377 224 363V120L151 194Q141 203 128 203Q115 203 105 194Q96 184 96 171Q96 158 105 148L233 20Q243 11 256 11Q269 11 279 20L407 148Q416 158 416 171Q416 184 407 194Q397 203 384 203Q371 203 361 194L288 120ZM64 363H192H64H192Q193 390 211 408Q229 426 256 427Q283 426 301 408Q319 390 320 363H448Q475 364 493 382Q511 400 512 427V459Q511 486 493 504Q475 522 448 523H64Q37 522 19 504Q1 486 0 459V427Q1 400 19 382Q37 364 64 363ZM432 467Q454 465 456 443Q454 421 432 419Q410 421 408 443Q410 465 432 467Z'/></svg>"); }
+.nn-icon--print{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M128 11Q101 12 83 30Q65 48 64 75V171H128V75H355L384 104V171H448V104Q448 78 429 59L400 30Q381 11 355 11H128ZM384 363V395V363V395V459H128V395V379V363H384ZM448 395H480H448H480Q494 395 503 386Q512 377 512 363V267Q511 240 493 222Q475 204 448 203H64Q37 204 19 222Q1 240 0 267V363Q0 377 9 386Q18 395 32 395H64V459Q65 486 83 504Q101 522 128 523H384Q411 522 429 504Q447 486 448 459V395ZM432 259Q454 261 456 283Q454 305 432 307Q410 305 408 283Q410 261 432 259Z'/></svg>"); }
+.nn-icon--send{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M498 17Q514 28 512 48L448 464Q445 479 432 487Q418 494 404 488L284 439L216 513Q200 528 180 521Q161 512 160 491V407Q160 401 164 397L332 214Q340 203 331 192Q321 183 309 191L106 372L18 328Q1 319 0 300Q0 281 16 271L464 15Q482 6 498 17Z'/></svg>"); }
+.nn-icon--log-in{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M218 117 341 240 218 117 341 240Q352 251 352 267Q352 283 341 294L218 417Q208 427 194 427Q180 427 170 417Q160 407 160 393V331H32Q18 331 9 322Q0 313 0 299V235Q0 221 9 212Q18 203 32 203H160V141Q160 127 170 117Q180 107 194 107Q208 107 218 117ZM352 427H416H352H416Q430 427 439 418Q448 409 448 395V139Q448 125 439 116Q430 107 416 107H352Q338 107 329 98Q320 89 320 75Q320 61 329 52Q338 43 352 43H416Q457 44 484 71Q511 98 512 139V395Q511 436 484 463Q457 490 416 491H352Q338 491 329 482Q320 473 320 459Q320 445 329 436Q338 427 352 427Z'/></svg>"); }
+.nn-icon--log-out{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M378 117 501 240 378 117 501 240Q512 251 512 267Q512 283 501 294L378 417Q368 427 354 427Q340 427 330 417Q320 407 320 393V331H192Q178 331 169 322Q160 313 160 299V235Q160 221 169 212Q178 203 192 203H320V141Q320 127 330 117Q340 107 354 107Q368 107 378 117ZM160 107H96H160H96Q82 107 73 116Q64 125 64 139V395Q64 409 73 418Q82 427 96 427H160Q174 427 183 436Q192 445 192 459Q192 473 183 482Q174 491 160 491H96Q55 490 28 463Q1 436 0 395V139Q1 98 28 71Q55 44 96 43H160Q174 43 183 52Q192 61 192 75Q192 89 183 98Q174 107 160 107Z'/></svg>"); }
+.nn-icon--user-plus{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 512'><path d='M96 139Q96 104 113 75Q130 46 160 28Q190 11 224 11Q258 11 288 28Q318 46 335 75Q352 104 352 139Q352 174 335 203Q318 232 288 250Q258 267 224 267Q190 267 160 250Q130 232 113 203Q96 174 96 139ZM0 493Q2 418 52 367Q103 317 178 315H270Q345 317 396 367Q446 418 448 493Q448 506 439 514Q431 523 418 523H30Q17 523 9 514Q0 506 0 493ZM504 323V259V323V259H440Q418 257 416 235Q418 213 440 211H504V147Q506 125 528 123Q550 125 552 147V211H616Q638 213 640 235Q638 257 616 259H552V323Q550 345 528 347Q506 345 504 323Z'/></svg>"); }
+.nn-icon--eye{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'><path d='M288 43Q227 44 179 67Q131 90 95 124Q60 157 37 192Q14 227 3 255Q-2 267 3 279Q14 307 37 342Q60 377 95 410Q131 444 179 467Q227 490 288 491Q349 490 397 467Q445 444 481 410Q516 377 539 342Q562 307 574 279Q579 267 574 255Q562 227 539 192Q516 157 481 124Q445 90 397 67Q349 44 288 43ZM144 267Q144 228 163 195Q182 162 216 142Q250 123 288 123Q326 123 360 142Q394 162 413 195Q432 228 432 267Q432 306 413 339Q394 372 360 392Q326 411 288 411Q250 411 216 392Q182 372 163 339Q144 306 144 267ZM288 203Q287 230 269 248Q251 266 224 267Q213 267 204 264Q194 262 192 271Q192 281 195 292Q207 331 240 350Q273 369 313 360Q352 348 371 315Q390 282 381 242Q372 211 348 192Q323 173 292 171Q283 173 285 183Q288 192 288 203Z'/></svg>"); }
+.nn-icon--eye-slash{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 512'><path d='M39 16Q20 4 5 20Q-7 39 9 54L601 518Q620 530 635 514Q647 495 631 480L526 398Q555 367 575 335Q595 304 606 279Q610 267 606 255Q594 227 571 192Q548 157 513 124Q477 90 429 67Q381 44 320 43Q269 44 226 60Q184 77 151 104L39 16ZM223 161Q263 124 320 123Q381 125 422 165Q462 206 464 267Q464 305 447 336L408 306Q421 276 413 242Q404 211 380 192Q355 173 324 171Q315 173 317 183Q320 192 320 203Q320 219 313 231L223 161ZM373 401Q348 411 320 411Q259 409 218 369Q178 328 176 267Q176 257 177 247L83 173Q49 219 35 255Q30 267 35 279Q46 307 69 342Q92 377 128 410Q163 444 211 467Q259 490 320 491Q392 489 446 459L373 401Z'/></svg>"); }
+.nn-icon--rotate{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M143 154Q192 107 255 107Q319 107 368 153L327 194Q316 206 322 220Q328 234 344 235H464Q464 235 464 235Q464 235 464 235H472Q494 233 496 211V83Q495 67 481 61Q467 55 455 66L413 108Q369 64 312 50Q255 36 199 50Q142 65 98 109Q61 146 45 192Q41 205 46 217Q52 228 64 233Q77 237 89 232Q100 226 105 214Q117 181 143 154ZM16 323V331V323V331V451Q17 467 31 473Q45 479 57 468L99 426Q143 470 200 484Q257 498 313 484Q370 469 414 425Q451 388 467 342Q472 329 466 317Q460 306 448 301Q435 297 423 302Q412 308 407 320Q396 354 369 380Q320 427 257 427Q193 427 144 381L185 340Q196 328 190 314Q184 300 168 299H48H40Q18 301 16 323Z'/></svg>"); }
+.nn-icon--undo{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M49 235H40H49H40Q18 233 16 211V83Q17 67 31 61Q45 55 57 66L99 108Q143 64 200 50Q257 36 313 50Q370 65 414 109Q458 153 473 210Q487 267 473 324Q458 381 414 425Q370 469 313 484Q256 498 199 484Q142 469 98 425Q88 416 88 403Q88 390 98 380Q107 371 120 371Q133 371 143 380Q192 427 256 427Q320 427 369 380Q416 331 416 267Q416 203 369 154Q320 107 257 107Q193 107 144 153L185 194Q196 206 190 220Q184 234 168 235H49Z'/></svg>"); }
+.nn-icon--check{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'><path d='M439 116Q448 126 448 139Q448 152 439 162L183 418Q173 427 160 427Q147 427 137 418L9 290Q0 280 0 267Q0 254 9 244Q19 235 32 235Q45 235 55 244L160 350L393 116Q403 107 416 107Q429 107 439 116Z'/></svg>"); }
+.nn-icon--close{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'><path d='M343 162Q352 152 352 139Q352 126 343 116Q333 107 320 107Q307 107 297 116L192 222L87 116Q77 107 64 107Q51 107 41 116Q32 126 32 139Q32 152 41 162L147 267L41 372Q32 382 32 395Q32 408 41 418Q51 427 64 427Q77 427 87 418L192 312L297 418Q307 427 320 427Q333 427 343 418Q352 408 352 395Q352 382 343 372L237 267L343 162Z'/></svg>"); }
+.nn-icon--menu{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'><path d='M0 107Q0 93 9 84Q18 75 32 75H416Q430 75 439 84Q448 93 448 107Q448 121 439 130Q430 139 416 139H32Q18 139 9 130Q0 121 0 107ZM0 267Q0 253 9 244Q18 235 32 235H416Q430 235 439 244Q448 253 448 267Q448 281 439 290Q430 299 416 299H32Q18 299 9 290Q0 281 0 267ZM448 427Q448 441 439 450Q430 459 416 459H32Q18 459 9 450Q0 441 0 427Q0 413 9 404Q18 395 32 395H416Q430 395 439 404Q448 413 448 427Z'/></svg>"); }
+.nn-icon--external{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M320 11Q306 11 297 20Q288 29 288 43Q288 57 297 66Q306 75 320 75H403L201 276Q192 286 192 299Q192 312 201 322Q211 331 224 331Q237 331 247 322L448 120V203Q448 217 457 226Q466 235 480 235Q494 235 503 226Q512 217 512 203V43Q512 29 503 20Q494 11 480 11H320ZM80 43Q46 44 23 66Q1 89 0 123V443Q1 477 23 500Q46 522 80 523H400Q434 522 457 500Q479 477 480 443V331Q480 317 471 308Q462 299 448 299Q434 299 425 308Q416 317 416 331V443Q415 458 400 459H80Q65 458 64 443V123Q65 108 80 107H192Q206 107 215 98Q224 89 224 75Q224 61 215 52Q206 43 192 43H80Z'/></svg>"); }
+.nn-icon--chevron-left{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'><path d='M9 244Q0 254 0 267Q0 280 9 290L201 482Q211 491 224 491Q237 491 247 482Q256 472 256 459Q256 446 247 436L77 267L247 98Q256 88 256 75Q256 62 247 52Q237 43 224 43Q211 43 201 52L9 244Z'/></svg>"); }
+.nn-icon--chevron-right{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'><path d='M311 244Q320 254 320 267Q320 280 311 290L119 482Q109 491 96 491Q83 491 73 482Q64 472 64 459Q64 446 73 436L243 267L73 98Q64 88 64 75Q64 62 73 52Q83 43 96 43Q109 43 119 52L311 244Z'/></svg>"); }
+.nn-icon--home{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'><path d='M576 267Q575 280 566 289Q557 298 544 299H512L513 459Q512 463 512 467V483Q512 500 500 511Q489 523 472 523H456Q454 523 453 523Q451 523 449 523H416H392Q375 523 364 511Q352 500 352 483V459V395Q352 381 343 372Q334 363 320 363H256Q242 363 233 372Q224 381 224 395V459V483Q224 500 212 511Q201 523 184 523H160H128Q127 523 126 523Q125 523 124 523Q122 523 120 523H104Q87 523 76 511Q64 500 64 483V371Q64 370 64 368V299H32Q18 298 9 289Q0 280 0 267Q0 253 10 243L266 19Q277 10 288 11Q300 11 309 18L565 243Q577 253 576 267Z'/></svg>"); }
+.nn-icon--key{ --nn-icon:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M336 363Q411 361 460 311Q510 262 512 187Q510 112 460 63Q411 13 336 11Q261 13 212 63Q162 112 160 187Q160 215 168 241L7 402Q0 409 0 419V499Q2 521 24 523H104Q126 521 128 499V459H168Q190 457 192 435V395H232Q242 395 249 388L282 355Q308 363 336 363ZM376 107Q399 108 411 127Q421 147 411 167Q399 186 376 187Q353 186 341 167Q331 147 341 127Q353 108 376 107Z'/></svg>"); }
+
+/* ---------- Groups of buttons ---------- */
+.nn-actions{ display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.nn-actions--end{ justify-content: flex-end; }
+.nn-actions--center{ justify-content: center; }
+.nn-actions > form{ margin: 0; }
+/* --fill: buttons share the row equally. */
+.nn-actions--fill > .nn-btn{ flex: 1 1 0; }
+@media (max-width: 639.98px){
+  .nn-actions{ flex-direction: column; align-items: stretch; }
+  .nn-actions > *{ flex: none; }
+  .nn-actions > .nn-btn,
+  .nn-actions > form,
+  .nn-actions > form > .nn-btn{ width: 100%; }
+  .nn-actions > .nn-btn--primary,
+  .nn-actions > form:has(> .nn-btn--primary){ order: -1; }
+}
+
+/* ---------- The shared Back button (includes/back-button.php) ----------
+   A secondary button with an arrow, top-left of the content area, under
+   the header. Its row: */
+.back-btn-row{
+  display: block;
+  margin-block: max(16px, env(safe-area-inset-top)) 16px;
+  margin-inline-start: env(safe-area-inset-left);
+}
+/* Inside .main (dashboard pages) the flex column already spaces every
+   child 20px apart. */
+.main > .back-btn-row{ margin-block: 0; }
+/* Checkout: align with the 1120px nav bar above it. */
+.back-btn-row--checkout{ width: min(1120px, calc(100% - 40px)); margin-left: auto; margin-right: auto; }
+/* 404: .not-found-page is a flex row built to center one child (the
+   card); keep the row out of flow so it can't disturb that. */
+.back-btn-row--overlay{
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  z-index: 2;
+  margin: 0;
+}
+
+/* Text for screen readers only (e.g. "(opens WhatsApp)" on an external link). */
+.nn-sr-only{
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}

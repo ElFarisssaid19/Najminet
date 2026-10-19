@@ -1,0 +1,56 @@
+DirectoryIndex landing.php index.php
+ErrorDocument 404 /404.php
+Options -Indexes
+
+# Second layer behind docker/najminet.conf: the project folder is the web
+# root, so non-public files and folders are denied here too.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+<FilesMatch "(?i)^(composer\.(json|lock)|Dockerfile|docker-compose.*\.ya?ml|.*\.(md|sql|sh|log|txt|ini|lock|dist|example|bak|orig|swp))$">
+    Require all denied
+</FilesMatch>
+<FilesMatch "^robots\.txt$">
+    Require all granted
+</FilesMatch>
+
+RewriteEngine On
+
+# Dot-folders (.git, …) and server-side folders: refused.
+RewriteRule ^(\.|vendor|sql|migrations|database|docker|scripts|classes|includes|middleware|uploads|storage)(/|$) - [F,L]
+RewriteRule (^|/)\. - [F,L]
+
+# The site is English-only. Old links that still carry ?lang=xx get a
+# permanent redirect to the same URL without that parameter; any other
+# parameters (a reset token, for example) are kept. GET/HEAD only, so a
+# form submission is never turned into a redirect.
+RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+RewriteCond %{QUERY_STRING} ^lang=[^&]*&?(.*)$
+RewriteRule ^ %{REQUEST_URI}?%1 [R=301,L,NE]
+RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+RewriteCond %{QUERY_STRING} ^(.*?)&lang=[^&]*(.*)$
+RewriteRule ^ %{REQUEST_URI}?%1%2 [R=301,L,NE]
+
+# ---------------------------------------------------------------------
+# Caching (needs mod_headers; the Dockerfile enables it).
+#  - Pages (PHP) always revalidate; PHP's own header, e.g. the session
+#    one or document.php's no-store, is kept when it is already set.
+#  - CSS/JS requested with ?v=<file time> never change under that URL,
+#    so they are cached for a year. Without ?v= they must revalidate.
+#  - assets/vendor/ and assets/fonts/: the version is part of the name,
+#    so those are cached for a year without ?v=.
+# ---------------------------------------------------------------------
+<IfModule mod_headers.c>
+    <FilesMatch "\.php$">
+        Header setifempty Cache-Control "no-cache"
+    </FilesMatch>
+    SetEnvIfExpr "%{QUERY_STRING} =~ /(^|&)v=[0-9]+/" ASSET_VERSIONED
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=31536000, immutable" env=ASSET_VERSIONED
+        Header set Cache-Control "no-cache" env=!ASSET_VERSIONED
+    </FilesMatch>
+    # The version is in the folder or file name here (bootstrap-5.3.2, fonts-2.css + hashed .woff2).
+    <If "%{REQUEST_URI} =~ m#^/assets/(vendor|fonts)/#">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </If>
+</IfModule>

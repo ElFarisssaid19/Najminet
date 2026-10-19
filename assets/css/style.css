@@ -1,0 +1,220 @@
+
+
+:root{
+  --font-h:'Sora',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+  --bg-1:#0B1220; --bg-2:#151E33;
+  --blue:#3B82F6; --violet:#8B5CF6; --emerald:#10B981;
+  --text-h:#F8FAFC; --text-body:#9AA5BD;
+  --glass:rgba(255,255,255,0.055); --glass-strong:rgba(255,255,255,0.09);
+  --border:rgba(255,255,255,0.12); --border-strong:rgba(255,255,255,0.22);
+  --card-shadow:0 12px 40px rgba(0,0,0,0.35);
+  --footer-bg:#080D18;
+  --hero-overlay:linear-gradient(90deg, rgba(11,18,32,0.92) 0%, rgba(11,18,32,0.55) 55%, rgba(11,18,32,0.25) 100%);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:linear-gradient(180deg,var(--bg-1) 0%, var(--bg-2) 100%);
+  color:var(--text-body);
+  font-family:var(--font-body);
+  margin:0;
+}
+h1, h2, h3, h4{font-family:var(--font-h);color:var(--text-h);letter-spacing:-0.02em;}
+.mono{font-family:var(--font-mono);}
+
+/* ============ GLASS PRIMITIVES ============ */
+.glass{
+  background:var(--glass);
+  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--border);
+  border-radius:22px;
+  box-shadow:var(--card-shadow);
+  transition:background .35s ease, border-color .35s ease, transform .25s ease, box-shadow .25s ease;
+}
+.glass-pill{
+  background:var(--glass-strong); border:1px solid var(--border);
+  border-radius:999px; backdrop-filter:blur(14px);
+  transition:background .35s ease, border-color .35s ease;
+}
+
+/* ============ BUTTONS ============ */
+
+
+/* ============ NAVBAR ============ */
+.navbar-glass{
+  position:sticky; top:calc(10px + env(safe-area-inset-top)); z-index:60;
+  background:var(--glass-strong);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:14px 0;
+  transition:background .35s ease, border-color .35s ease;
+  border-radius:22px;
+  width:min(1000px, calc(100% - 24px));
+  margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.navbar-glass .brand{font-family:var(--font-h); font-weight:800; color:var(--text-h); font-size:1.3rem; text-decoration:none;}
+.nav-pill{
+  color:var(--text-h); text-decoration:none; font-weight:600; font-size:.92rem;
+  padding:9px 18px; border-radius:12px; border:1px solid transparent; transition:all .2s ease;
+}
+.nav-pill:hover{background:var(--glass); border-color:var(--border);}
+
+.nav-pill:focus-visible{outline:2px solid var(--blue); outline-offset:2px;}
+.offcanvas-custom{background:var(--bg-1)!important; max-width:86vw; padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom) env(safe-area-inset-left);}
+.offcanvas-custom .nav-pill{display:flex; align-items:center; min-height:44px; width:100%;}
+.offcanvas-custom .nav-user{color:var(--text-body); font-weight:500;}
+.logout-form{margin:0;}
+/* Header links switch to the menu button below 1024px (same breakpoint as the dashboard). */
+.nav-desktop, .nav-desktop-inline, .nav-desktop-block{display:none !important;}
+@media (min-width:1024px){
+  .nav-desktop{display:flex !important;}
+  .nav-desktop-inline{display:inline-flex !important;}
+  .nav-desktop-block{display:block !important;}
+  .nav-mobile-only{display:none !important;}
+}
+@media (max-width:1023.98px){
+  .navbar-glass .brand{display:inline-flex; align-items:center; min-height:44px;}
+}
+
+/* ============ HERO ============ */
+.hero{
+  padding:90px 0 90px;
+  position:relative;
+  overflow:hidden;
+  background-size:cover;
+  background-position:center;
+}
+.hero-overlay{position:absolute; inset:0; z-index:0; background:var(--hero-overlay);}
+.hero-content{position:relative; z-index:2;}
+.eyebrow{display:inline-block; padding:8px 18px; font-size:.8rem; font-weight:600; color:var(--blue); margin-bottom:20px;}
+
+.hero h1{font-size:clamp(2.1rem,4vw,3rem); line-height:1.1;}
+
+/* ============ SECTIONS ============ */
+.section{padding:100px 0; position:relative; z-index:1;}
+.section-title{font-size:clamp(1.8rem,3vw,2.5rem); margin-bottom:14px;}
+.section-sub{color:var(--text-body); font-size:1.05rem; max-width:560px;}
+
+/* ticket-style card */
+.ticket-card{
+  padding:32px 26px; 
+  height:100%;
+
+}
+.icon-badge{
+  width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, rgba(59,130,246,0.18), rgba(139,92,246,0.18));
+  border:1px solid var(--border-strong); font-size:1.3rem; margin-bottom:16px;
+}
+.ticket-card:hover{transform:translateY(-6px); border-color:rgba(59,130,246,0.5); box-shadow:0 18px 44px rgba(59,130,246,.16);}
+
+.trust-strip{padding:18px 26px; display:flex; flex-wrap:wrap; gap:14px; justify-content:center;}
+.trust-strip span{color:var(--text-h); font-size:.9rem; font-weight:500;}
+
+/* ============ PRICING ============ */
+.price-card{padding:40px 34px; height:100%; position:relative;}
+.price-card.featured{border:1px solid rgba(16,185,129,0.45); box-shadow:0 20px 50px rgba(16,185,129,.14);}
+.badge-recommended{
+  position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--emerald),#059669); color:#fff;
+  font-size:.75rem; font-weight:700; padding:6px 18px; border-radius:999px; letter-spacing:.03em;
+}
+.price-value{font-family:var(--font-mono); font-size:2.6rem; font-weight:600; color:var(--text-h);}
+.price-list{list-style:none; padding:0; margin:26px 0;}
+.price-list li{display:flex; gap:10px; margin-bottom:12px; color:var(--text-body); font-size:.95rem;}
+.check-emerald{color:var(--emerald); font-weight:700; flex-shrink:0;}
+
+/* ============ FORM INPUTS ============ */
+.form-control-glass{
+  border:1px solid var(--border-strong);
+  border-radius:12px; padding:12px 16px; backdrop-filter:blur(10px);
+}
+.form-control-glass:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(59,130,246,0.15); outline:none;
+}
+
+/* ============ CTA ============ */
+.final-cta{padding:64px; text-align:center;}
+
+/* ============ FOOTER ============ */
+footer{background:var(--footer-bg); border-top:1px solid var(--border); padding:60px 0 24px; transition:background .35s ease, border-color .35s ease;}
+footer a{color:var(--text-body); text-decoration:none; font-size:.92rem;}
+footer li a{display:inline-block;}
+footer a:hover{color:var(--blue);}
+footer h6, footer .footer-title{color:var(--text-h); font-family:var(--font-h); font-size:.9rem; margin-bottom:16px; letter-spacing:.03em;}
+
+/* ============ REVEAL ANIMATION ============ */
+
+.js .reveal{opacity:0; transform:translateY(26px); transition:opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1); transition-delay:var(--d,0ms);}
+.js .reveal.in{opacity:1; transform:translateY(0);}
+@media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none;}}
+
+@media (max-width:767.98px){
+  .hero-actions, .not-found-actions{width:100%;}
+  .hero-actions > a, .not-found-actions > a{min-height:44px; display:inline-flex; align-items:center; justify-content:center;}
+  .trust-strip{padding-inline:16px;}
+  .section{padding:64px 0;}
+  .price-card.featured{transform:none;}
+  .hero{padding:70px 0;}
+}
+
+.result-updated{
+    transform:scale(1.06);
+}
+
+.text-danger{
+    color:#ef4444 !important;
+}
+/* ============ FREE TOOLS: invoice generator and expense notes ============ */
+@media print{
+  .navbar-glass, footer, .no-print{ display:none !important; }
+  body{ background:#fff !important; }
+  .glass{ background:#fff !important; border:1px solid #ddd !important; box-shadow:none !important; backdrop-filter:none !important; color:#111 !important; }
+  .glass *{ color:#111 !important; }
+  .hero{ padding:20px 0 !important; }
+  .hero-overlay{ display:none; }
+}
+.expense-table input, .expense-table select, .invoice-table input{ border:none; width:100%; padding:8px 6px; }
+.expense-table input:focus, .expense-table select:focus, .invoice-table input:focus{ outline:1px solid var(--blue); border-radius:6px; }
+.expense-table th, .invoice-table th{ font-size:.75rem; text-transform:uppercase; letter-spacing:.04em; color:var(--text-body); padding:10px 6px; border-bottom:1px solid var(--border-strong); text-align:left; }
+.expense-table td, .invoice-table td{ border-bottom:1px solid var(--border); vertical-align:middle; }
+@media (max-width:1023.98px){
+  .invoice-table input.qty, .invoice-table input.price, .expense-table input.amount{ min-width:64px; }
+}
+/* Below 640px each line is a small card: labelled fields, two per row. */
+@media (max-width:639.98px){
+  .items-stack, .items-stack tbody, .items-stack tr, .items-stack td{ display:block; width:100%; }
+  .items-stack thead{ display:none; } /* each field shows its own label */
+  .items-stack tr{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px 12px; padding:12px; margin-bottom:12px; border:1px solid var(--border); border-radius:14px; background:var(--glass); }
+  .items-stack > :not(caption) > * > *{ padding:0; border:0; background:transparent; box-shadow:none; }
+  .items-stack td.cell-wide{ grid-column:1 / -1; }
+  .items-stack td[data-label]::before{ content:attr(data-label); display:block; margin-bottom:4px; font-size:.72rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--text-body); }
+  .items-stack td.cell-remove{ display:flex; align-items:flex-end; justify-content:flex-end; }
+  .items-stack input, .items-stack select{ border:1px solid var(--border-strong); border-radius:10px; padding:10px 12px; }
+  .items-stack .lineTotal{ display:flex; align-items:center; min-height:44px; color:var(--text-h); }
+}
+
+/* Honeypot fields (contact form): off-screen, not display:none, which some bots skip. */
+.hp-field{ position:absolute; inset-inline-start:-10000px; top:auto; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+
+/* ============ TOUCH SCREENS (below 1024px) ============ */
+@media (max-width:1023.98px){
+  footer li a{display:inline-flex; align-items:center; min-height:44px;}
+  footer .list-unstyled{gap:0 !important;}
+}
+
+/* Card padding (was inline on each page): roomy on desktop, tighter on phones. */
+.glass-pad-lg{padding:44px;}
+.glass-pad{padding:40px;}
+.glass-pad-tight{padding:36px 40px;}
+@media (max-width:767.98px){
+  .glass-pad-lg, .glass-pad, .glass-pad-tight{padding:28px 22px;}
+}
+@media (max-width:479.98px){
+  .glass-pad-lg, .glass-pad, .glass-pad-tight{padding:22px 16px;}
+}

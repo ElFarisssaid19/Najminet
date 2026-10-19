@@ -1,0 +1,50 @@
+services:
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - .:/var/www/html/
+      # Keeps the image's vendor/ (composer install) visible under the bind
+      # mount. After changing composer.lock: docker compose up -d --build -V
+      - /var/www/html/vendor
+      # Uploaded documents, outside the web root; served only by document.php.
+      - documents:/var/www/storage/documents
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    restart: always
+    # Credentials come from .env.local; see docker/db-entrypoint.sh.
+    entrypoint: ["bash", "/najminet/db-entrypoint.sh"]
+    command: ["mysqld"]
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      # Builds the full schema, only when db_data is empty.
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./docker/db-entrypoint.sh:/najminet/db-entrypoint.sh:ro
+      - type: bind
+        source: ./.env.local
+        target: /najminet/.env.local
+        read_only: true
+        bind:
+          # Fail loudly instead of creating an empty .env.local directory.
+          create_host_path: false
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "127.0.0.1:8081:80"
+    environment:
+      # No PMA_USER / PMA_PASSWORD: phpMyAdmin asks for credentials.
+      PMA_HOST: db
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  documents:

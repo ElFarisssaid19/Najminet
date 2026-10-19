@@ -1,0 +1,179 @@
+
+
+:root{
+  --bg: #05060f;
+  --surface: rgba(255,255,255,0.04);
+  --surface-strong: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.1);
+  --text: #f4f5fb;
+  --text-muted: #9497b3;
+  --text-faint: #8a8eaa;
+  --violet: #7c5cff;
+  --blue: #4e7bff;
+  --pink: #ff5ca8;
+  --gradient-brand: linear-gradient(135deg, var(--violet), var(--blue));
+  --radius-s: 10px;
+  --radius-m: 18px;
+  --radius-l: 28px;
+  --ease: cubic-bezier(.22,.85,.32,1);
+}
+*{ box-sizing: border-box; }
+
+html, body{ min-height: 100%; margin: 0; }
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family:"Sora", sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+a{ text-decoration:none; color:inherit; }
+/* Same heading and paragraph defaults whether or not the page loads Bootstrap. */
+h1,h2,h3{ font-family:"Space Grotesk", sans-serif; font-weight:500; line-height:1.2; margin:0; letter-spacing:-0.02em; }
+p{ margin-top:0; }
+
+/* background fx */
+.bg-fx{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+.bg-fx__blob{ position:absolute; width:460px; height:460px; border-radius:50%; filter:blur(120px); opacity:.32; animation: blobFloat 26s ease-in-out infinite; }
+.bg-fx__blob--1{ background:var(--violet); top:-140px; left:-100px; }
+.bg-fx__blob--2{ background:var(--blue); bottom:-160px; right:-120px; animation-duration:32s; animation-delay:-8s; }
+@keyframes blobFloat{ 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(50px,40px) scale(1.12);} }
+@media (prefers-reduced-motion: reduce){ .bg-fx__blob{ animation:none; } }
+body > *:not(.bg-fx){ position:relative; z-index:1; }
+
+/* ---------- Auth layout (login, register, forgot-password, reset-password) ----------
+   One container gives the top bar and the card the same width and the same
+   left/right edges at every breakpoint; the card is the same size, radius
+   and padding on all four pages. */
+.auth-page{ --auth-w: 1080px; --auth-gutter: 16px; }
+@media (min-width: 640px){ .auth-page{ --auth-gutter: 24px; } }
+@media (max-width: 1023.98px){ .auth-page{ --auth-w: 560px; } }
+.auth-container{ width: min(var(--auth-w), calc(100% - 2 * var(--auth-gutter))); margin-inline: auto; }
+
+/* Top bar: logo on the left, Back on the right, one row at every width. */
+.auth-topbar{
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-block: max(14px, env(safe-area-inset-top)) 14px;
+}
+.brand{ display:flex; align-items:center; gap:10px; min-height:44px; color:var(--text); }
+.brand:hover{ color:#fff; }
+.brand:focus-visible{ outline:2px solid #c4b5fd; outline-offset:4px; border-radius:10px; }
+.brand__icon{
+  width:36px; height:36px; display:grid; place-items:center;
+  border-radius:10px; background:var(--gradient-brand); color:#fff;
+  box-shadow:0 8px 20px -6px rgba(124,92,255,.6);
+}
+.brand__text{ font-family:"Space Grotesk"; font-weight:700; font-size:1rem; line-height:1.1; }
+
+.auth-shell{ padding-bottom: max(40px, env(safe-area-inset-bottom)); }
+.auth-card{
+  width:100%;
+  display:grid; grid-template-columns: 55% 45%;
+  border-radius: var(--radius-l);
+  overflow:hidden;
+  border:1px solid var(--border);
+  background: rgba(15,17,35,0.6);
+  backdrop-filter: blur(22px) saturate(160%);
+  box-shadow: 0 40px 100px -30px rgba(0,0,0,.65);
+}
+
+/* ---------- Form side ---------- */
+.auth-form-side{ padding:40px 48px; }
+.auth-mark{
+  width:48px; height:48px; display:grid; place-items:center; margin-bottom:18px;
+  border-radius:12px; color:#c9c3ff; font-size:1.25rem;
+  background:linear-gradient(145deg,#2a235c,#181a42); box-shadow:inset 0 1px rgba(255,255,255,.08);
+}
+.auth-eyebrow{ color:#a592ff; font-weight:700; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; }
+.auth-title{ font-size:clamp(1.6rem, 1.25rem + 1.2vw, 2rem); margin:12px 0 8px; }
+.auth-mark + .auth-title{ margin-top:0; }
+.auth-subtitle{ color:var(--text-muted); font-size:.92rem; line-height:1.6; margin:0 0 24px; }
+
+.social-row{ margin-bottom:22px; }
+.divider{ display:flex; align-items:center; gap:14px; color:var(--text-faint); font-size:.78rem; margin-bottom:22px; }
+.divider::before, .divider::after{ content:""; flex:1; height:1px; background:var(--border); }
+
+.form-field{ margin-bottom:16px; }
+.form-field label{ display:block; font-size:.8rem; font-weight:600; color:var(--text); margin-bottom:7px; }
+.input-wrap{ position:relative; }
+.input-wrap i.leading{ position:absolute; inset-inline-start:14px; top:50%; transform:translateY(-50%); color:var(--text-faint); font-size:.85rem; pointer-events:none; }
+.form-control-glass{
+  width:100%; border:1px solid var(--border); border-radius:12px;
+  padding-block:12px; padding-inline:40px 14px;
+  font-size:.92rem; font-family:inherit;
+  transition:border-color .2s;
+}
+.form-control-glass:focus{ outline:none; border-color:var(--violet); box-shadow:0 0 0 3px rgba(124,92,255,.15); }
+/* Show/hide password: an icon button of the shared system, inside the field. */
+.input-wrap .toggle-pass{ position:absolute; inset-inline-end:2px; top:0; bottom:0; margin-block:auto; color:var(--text-muted); }
+.input-wrap:has(.toggle-pass) .form-control-glass{ padding-inline-end:48px; }
+
+.row-between{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:22px; font-size:.82rem; }
+.row-between a{ color:#a592ff; font-weight:600; display:inline-flex; align-items:center; min-height:44px; }
+.checkbox-line{ display:flex; align-items:center; gap:8px; min-height:44px; color:var(--text-muted); }
+.checkbox-line input{ accent-color: var(--violet); }
+
+.switch-line{ text-align:center; font-size:.85rem; color:var(--text-muted); margin:22px 0 0; }
+.switch-line a{ color:#7fa0ff; font-weight:700; display:inline-flex; align-items:center; justify-content:center; min-height:44px; min-width:44px; }
+
+.error-box{
+  border:1px solid rgba(239,68,68,.4); background:rgba(239,68,68,.08); color:#F87171;
+  border-radius:12px; padding:14px 16px; margin-bottom:20px; font-size:.85rem;
+}
+.error-box div{ margin-bottom:4px; }
+.error-box div:last-child{ margin-bottom:0; }
+.auth-note{ color:var(--text-muted); font-size:.92rem; line-height:1.6; margin:0 0 20px; }
+
+/* ---------- Decorative side ----------
+   Content vertically centred, the same way on every page. When the card is
+   taller than the screen (register), it is centred in the visible part of
+   the card and stays there while the form scrolls. */
+.auth-decor-side{ position:relative; isolation:isolate; overflow:hidden; color:#fff; background: var(--gradient-brand); }
+.auth-decor-side::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.25), transparent 55%);
+}
+.auth-decor-inner{
+  position:sticky; top:0;
+  height:min(100%, 100dvh);
+  display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+  padding:40px 44px;
+}
+.decor-badge{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:7px 16px; border-radius:999px; background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.28); font-size:.78rem; font-weight:600;
+  margin-bottom:22px;
+}
+.decor-title{ font-size:clamp(1.6rem, 1.25rem + 1.2vw, 2rem); margin-bottom:16px; }
+.decor-text{ font-size:.95rem; opacity:.92; line-height:1.65; margin:0 0 30px; max-width:340px; }
+.decor-list{ list-style:none; padding:0; margin:0 0 32px; display:flex; flex-direction:column; gap:12px; }
+.decor-list li{ display:flex; align-items:center; gap:10px; font-size:.85rem; opacity:.95; }
+.decor-list i{ width:18px; }
+
+/* Password-reset panel: typography only, its own gradient. */
+.auth-decor-side--security{ background:linear-gradient(135deg,#2d1871 0%,#4935b9 48%,#1769d0 100%); }
+.auth-decor-side--security::before{ content:none; }
+.security-panel-label{ margin:0 0 12px; color:rgba(255,255,255,.78); font-size:.69rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; }
+.security-panel-accent{ display:block; width:34px; height:3px; margin-bottom:17px; border-radius:3px; background:#b39aff; box-shadow:0 0 14px rgba(201,181,255,.55); }
+.auth-decor-side--security h2{ margin:0 0 14px; color:#fff; font-size:clamp(1.55rem, 1.25rem + 1.1vw, 1.85rem); line-height:1.14; letter-spacing:-.035em; }
+.security-panel-description{ margin:0; color:rgba(255,255,255,.82); font-size:.88rem; line-height:1.68; max-width:360px; }
+.security-panel-features{ display:flex; flex-direction:column; gap:12px; margin:26px 0 0; padding:0; list-style:none; max-width:360px; }
+.security-panel-features li{ display:flex; align-items:flex-start; gap:10px; color:rgba(255,255,255,.9); font-size:.82rem; line-height:1.45; }
+.security-panel-features li::before{ content:"✓"; display:grid; flex:0 0 18px; width:18px; height:18px; place-items:center; margin-top:1px; border:1px solid rgba(222,214,255,.46); border-radius:50%; color:#fff; font-size:.68rem; font-weight:700; }
+
+/* ---------- Below 1024px: one column, the form first ---------- */
+@media (max-width: 1023.98px){
+  .auth-card{ grid-template-columns:1fr; }
+  .auth-form-side{ padding:36px 32px; }
+  .auth-decor-inner{ position:static; height:auto; padding:32px; }
+  .decor-list{ display:none; }
+}
+@media (max-width: 479.98px){
+  .auth-form-side{ padding:28px 20px; }
+  .auth-decor-inner{ padding:28px 20px; }
+  .brand__icon{ width:32px; height:32px; }
+  /* Long account links must not crowd the form on small phones. */
+  .row-between{ align-items:flex-start; flex-direction:column; gap:0; }
+}

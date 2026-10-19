@@ -1,0 +1,20 @@
+uploads/
+/vendor/
+.env
+.env.*
+!.env.local.example
+storage/
+contact-log.txt
+*.log
+logs/
+# SQL dumps (the schema files in sql/ stay tracked)
+/*.sql
+*.sql.gz
+*.dump
+backup*.sql
+.vscode/
+.idea/
+.DS_Store
+node_modules/
+.phpunit.result.cache
+.claude/

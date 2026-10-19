@@ -1,0 +1,22 @@
+/* Shared responsive baseline, imported by every page stylesheet.
+   Breakpoints used across NajmiNet: 480 / 640 / 768 / 1024 / 1280.
+   Mobile-first rules use (min-width: N); overrides for smaller screens use
+   (max-width: N - 0.02px), e.g. (max-width:1023.98px). */
+
+html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+
+/* A fixed or sticky header must never hide an anchor target or the field that just got focus
+   (the on-screen keyboard scrolls focused fields into view). */
+html { scroll-padding-top:104px; }
+input, select, textarea { scroll-margin-top:104px; scroll-margin-bottom:24px; }
+
+/* Safety net only: nothing should be wider than the screen. clip (unlike
+   hidden) does not create a scroll container, so sticky headers keep working. */
+html, body { max-width:100%; overflow-x:clip; }
+
+/* Long words, URLs and email addresses wrap instead of widening the page. */
+body { overflow-wrap:break-word; }
+
+img, svg, video, canvas, iframe { max-width:100%; }
+img, video { height:auto; }
+input, select, textarea, button { max-width:100%; }

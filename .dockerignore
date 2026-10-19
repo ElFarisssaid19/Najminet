@@ -1,0 +1,15 @@
+.git
+.env
+.env.*
+vendor
+node_modules
+uploads/
+storage/
+.claude/
+.vscode/
+.idea/
+.DS_Store
+*.log
+contact-log.txt
+*.sql.gz
+*.dump

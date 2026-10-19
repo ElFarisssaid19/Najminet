@@ -1,0 +1,43 @@
+/* ---------------------------------------------------------------------
+ * auth-forms.css — password checklist, strength meter and field
+ * messages for the register and reset-password forms
+ * (assets/js/auth-forms.js). Logical properties keep it correct in RTL.
+ * ------------------------------------------------------------------- */
+
+.field-message{
+  margin: 6px 0 0;
+  font-size: .78rem;
+  line-height: 1.45;
+  color: #f87171;
+}
+.field-message a{ color: #93b4ff; font-weight: 600; text-decoration: underline; }
+.form-control-glass[aria-invalid="true"]{ border-color: rgba(248,113,113,.7); }
+
+/* Strength meter */
+.password-strength{ margin-top: 10px; }
+.password-strength[hidden]{ display: none; }
+.password-strength__bar{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.password-strength__bar span{ height: 5px; border-radius: 3px; background: rgba(255,255,255,.12); transition: background .2s; }
+.password-strength[data-level="weak"] .password-strength__bar span:nth-child(1){ background: #f87171; }
+.password-strength[data-level="medium"] .password-strength__bar span:nth-child(-n+2){ background: #fbbf24; }
+.password-strength[data-level="strong"] .password-strength__bar span{ background: #4ade80; }
+.password-strength__label{ margin: 6px 0 0; font-size: .75rem; color: var(--text-muted, #9497b3); }
+.password-strength[data-level="weak"] strong{ color: #f87171; }
+.password-strength[data-level="medium"] strong{ color: #fbbf24; }
+.password-strength[data-level="strong"] strong{ color: #4ade80; }
+
+/* Rule checklist */
+.password-rules{ margin-top: 10px; font-size: .78rem; }
+.password-rules__title{ margin: 0 0 6px; font-weight: 600; color: var(--text-muted, #9497b3); }
+.password-rules ul{
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 4px 14px;
+}
+.password-rules li{ display: flex; align-items: baseline; gap: 8px; color: var(--text-muted, #9497b3); transition: color .2s; }
+.password-rules .rule-icon{ flex: 0 0 1em; text-align: center; font-weight: 700; }
+.password-rules .rule-icon::before{ content: "○"; }
+.password-rules li[data-state="met"]{ color: #4ade80; }
+.password-rules li[data-state="met"] .rule-icon::before{ content: "✓"; }
+.password-rules li[data-state="error"]{ color: #f87171; }
+.password-rules li[data-state="error"] .rule-icon::before{ content: "✕"; }
+.password-rules li[data-state="pending"] .rule-icon::before{ content: "…"; }

@@ -1,0 +1,105 @@
+/* Shared dark native-control baseline. Keep this file as the single source
+   for browser-level form colors across NajmiNet. */
+:root { color-scheme: dark; }
+
+input,
+textarea,
+select,
+datalist {
+  color: #f8fafc !important;
+  background-color: #1b2234 !important;
+  caret-color: #f8fafc;
+  color-scheme: dark;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #a9b4ca !important;
+  opacity: 1;
+}
+
+select,
+input,
+textarea {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+option,
+optgroup,
+datalist option {
+  color: #ffffff !important;
+  background-color: #1b2234 !important;
+}
+
+option:checked,
+option:hover,
+option:focus {
+  color: #ffffff !important;
+  background-color: #34476d !important;
+}
+
+option:disabled,
+optgroup:disabled,
+select:disabled,
+input:disabled,
+textarea:disabled {
+  color: #8b96ac !important;
+  background-color: #121827 !important;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="month"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.35);
+  cursor: pointer;
+}
+
+input::-webkit-calendar-picker-indicator { color: #f8fafc; }
+input::-webkit-datetime-edit,
+input::-webkit-datetime-edit-fields-wrapper,
+input::-webkit-datetime-edit-text,
+input::-webkit-datetime-edit-month-field,
+input::-webkit-datetime-edit-day-field,
+input::-webkit-datetime-edit-year-field,
+input::-webkit-datetime-edit-hour-field,
+input::-webkit-datetime-edit-minute-field,
+input::-webkit-datetime-edit-ampm-field { color: #f8fafc; }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #f8fafc;
+  -webkit-box-shadow: 0 0 0 1000px #1b2234 inset;
+  box-shadow: 0 0 0 1000px #1b2234 inset;
+  caret-color: #f8fafc;
+  transition: background-color 9999s ease-out 0s;
+}
+
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+  box-shadow: 0 0 0 1000px #1b2234 inset;
+  -moz-text-fill-color: #f8fafc;
+}
+
+/* Touch screens (below 1024px): 16px text so iOS Safari does not zoom into
+   a field on focus, and fields at least 44px tall to tap comfortably. */
+@media (max-width:1023.98px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+}
