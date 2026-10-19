@@ -114,7 +114,6 @@ unset($_SESSION['newsletter_flash']);
                 <li><i class="fa-solid fa-shield-halved"></i> Secure</li>
                 <li><i class="fa-solid fa-bolt"></i> Fast</li>
                 <li><i class="fa-solid fa-circle-check"></i> Reliable</li>
-                <li><i class="fa-solid fa-headset"></i> 24/7 Support</li>
             </ul>
         </div>
 
@@ -198,23 +197,10 @@ unset($_SESSION['newsletter_flash']);
                 </div>
 
                 <div class="mockup__footer">
-                    <i class="fa-solid fa-circle-check"></i> Compliant with Moroccan tax &amp; CNSS regulations
+                    <i class="fa-solid fa-circle-check"></i> Built for Moroccan VAT and CNSS
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<!-- ========== TRUSTED BY ========== -->
-<section class="trusted">
-    <p class="trusted__label">Trusted by businesses worldwide</p>
-    <div class="trusted__logos">
-        <span><i class="fa-solid fa-cube"></i> TechCorp</span>
-        <span><i class="fa-solid fa-layer-group"></i> BuildFast</span>
-        <span><i class="fa-regular fa-circle"></i> CreativeStudio</span>
-        <span><i class="fa-solid fa-signal"></i> FinancePro</span>
-        <span><i class="fa-solid fa-globe"></i> GlobalTrade</span>
-        <span><i class="fa-solid fa-xmark"></i> InnovateX</span>
     </div>
 </section>
 

@@ -124,7 +124,7 @@ final class PayPalCheckout
             }
             $this->pdo->prepare(
                 "UPDATE users
-                    SET plan = 'professional', subscription_status = 'active', payment_provider = 'paypal',
+                    SET plan = 'professional', subscription_status = 'active', payment_provider = 'paypal', trial_used = 1,
                         paypal_order_id = ?, subscription_start = NOW(),
                         subscription_end = DATE_ADD(NOW(), INTERVAL " . self::PLAN_DAYS . " DAY)
                   WHERE id = ?"

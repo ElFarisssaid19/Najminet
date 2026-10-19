@@ -6,13 +6,13 @@
 --     mysql -u <user> -p <database> < sql/init.sql
 --
 -- Existing databases are upgraded with the numbered files in sql/
--- (000 … 013) instead. They are safe to re-run, and running them on a
+-- (000 … 014) instead. They are safe to re-run, and running them on a
 -- database built from this file changes nothing. When the schema
 -- changes, update this file AND add a new numbered migration.
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
--- Users and subscription state (000, 001, 005, 006, 010)
+-- Users and subscription state (000, 001, 005, 006, 010, 014)
 -- The subscription lives on the user row: plan, status, period and the
 -- payment provider / order that activated it.
 -- ---------------------------------------------------------------------
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS users (
     subscription_status     VARCHAR(20) DEFAULT NULL,
     subscription_start      DATETIME DEFAULT NULL,
     subscription_end        DATETIME DEFAULT NULL,
-    trial_used              TINYINT(1) NOT NULL DEFAULT 0,
+    trial_used              TINYINT(1) NOT NULL DEFAULT 0,      -- 1 once the account started its trial or paid (014)
     payment_provider        ENUM('stripe','paypal') NULL DEFAULT NULL,
     paypal_order_id         VARCHAR(64) NULL DEFAULT NULL,
     stripe_customer_id      VARCHAR(255) DEFAULT NULL,

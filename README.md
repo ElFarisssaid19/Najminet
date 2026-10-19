@@ -6,6 +6,7 @@ A financial management workspace for small Moroccan businesses: invoices, quotes
 ![MySQL 8.0](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
 ![Apache](https://img.shields.io/badge/Apache-2.4-D22128?logo=apache&logoColor=white)
 ![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ![Landing page](docs/screenshots/landing.webp)
 
@@ -129,7 +130,7 @@ flowchart LR
 ### 1. Clone
 
 ```bash
-git clone https://github.com/najmi9/Najminet.git
+git clone https://github.com/ElFarisssaid19/Najminet.git
 cd Najminet
 ```
 
@@ -192,6 +193,7 @@ Every setting lives in `.env.local`; the template is [`.env.local.example`](.env
 | `MAIL_FROM_NAME` | Sender name shown in emails | Your choice |
 | `MAIL_REPLY_TO` | Reply-To address (optional, defaults to `MAIL_FROM`) | Your choice |
 | `CONTACT_TO` | Mailbox that receives contact-form messages (optional, defaults to `MAIL_FROM`) | Your choice |
+| `CONTACT_EMAIL` | Public email address shown on the contact page (optional). When empty, or still the `example.com` placeholder, the email block is hidden. | Your business email |
 | `CONTACT_WHATSAPP` | WhatsApp number for the "Chat on WhatsApp" links on the contact page and in the footer (optional). International format, digits only, e.g. `2126XXXXXXXX`. When empty, the links are hidden. | Your business WhatsApp number |
 | `NEWSLETTER_ADMIN_EMAIL` | Notified when a newsletter subscriber confirms (optional) | Your choice |
 | `PAYPAL_MODE` | `sandbox` for testing, `live` for real payments | — |
@@ -237,7 +239,7 @@ To check the settings, send a test email: `docker compose exec web php scripts/s
 ## Database
 
 - **Fresh install:** [`sql/init.sql`](sql/init.sql) holds the full schema. With Docker, MySQL runs it automatically the first time the database volume is empty.
-- **Upgrading an existing database:** the numbered files `sql/000_…sql` to `sql/013_…sql` are migrations. Apply them in order. Each one is safe to run again, so you can run them all:
+- **Upgrading an existing database:** the numbered files `sql/000_…sql` to `sql/014_…sql` are migrations. Apply them in order. Each one is safe to run again, so you can run them all:
 
 ```bash
 DB_USER="$(grep '^DB_USER=' .env.local | cut -d= -f2-)"
@@ -307,4 +309,6 @@ Developed by Said El Fariss (GitHub: [ElFarisssaid19](https://github.com/ElFaris
 
 ## License
 
-No license has been chosen yet. Until a `LICENSE` file is added, no permission is granted to use, copy or modify this code.
+Released under the [MIT License](LICENSE). Copyright (c) 2026 Said El Fariss and NajmiNet Innovations.
+
+Third-party assets keep their own licenses (see [Third-party assets](#third-party-assets)).

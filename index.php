@@ -8,9 +8,10 @@ require_once __DIR__ . '/classes/SubscriptionManager.php';
 // plan here; account creation itself never creates a subscription.
 $pricingMessage = '';
 $startUrl = isset($_SESSION['user_id']) ? '#pricing' : '/auth/register.php';
+$subscriptions = new SubscriptionManager($pdo);
 // Read by includes/header.php: subscribed users get "Dashboard" instead of "View plans".
 $hasActiveSubscription = isset($_SESSION['user_id'])
-    && (new SubscriptionManager($pdo))->isSubscriptionActive((int) $_SESSION['user_id']);
+    && $subscriptions->isSubscriptionActive((int) $_SESSION['user_id']);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['subscription_action'] ?? '') === 'start_trial') {
     if (empty($_SESSION['user_id'])) {
         header('Location: /auth/register.php');
@@ -18,14 +19,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['subscription_action'] ?? '
     }
     AuthSecurity::requireValidCsrf();
 
-    $subscriptions = new SubscriptionManager($pdo);
+    // startTrial() itself refuses accounts that can't have a trial, even if the form is forced.
     if ($subscriptions->startTrial((int) $_SESSION['user_id'])) {
         header('Location: /dashboard/dashboard.php');
         exit;
     }
 
-    $pricingMessage = 'You have already used your free trial.';
+    $pricingMessage = $subscriptions->trialRefusal((int) $_SESSION['user_id'])
+        ?? 'The free trial could not be started. Please try again.';
 }
+// Why a signed-in user can't start the trial (null: they can). "Start free trial" is only shown when null.
+$trialRefusal = isset($_SESSION['user_id']) ? $subscriptions->trialRefusal((int) $_SESSION['user_id']) : null;
 ?>
 <?php
 $pageTitle = "NajmiNet Innovations | Invoicing, VAT & CNSS Payroll Software in Morocco";
@@ -122,14 +126,16 @@ $pageTitle = "NajmiNet Innovations | Invoicing, VAT & CNSS Payroll Software in M
           </ul>
           <?php if ($pricingMessage !== ''): ?>
             <p class="small mt-3 mb-0" role="alert"><?= htmlspecialchars($pricingMessage) ?></p>
+          <?php elseif ($trialRefusal !== null): ?>
+            <p class="small mt-3 mb-0"><?= htmlspecialchars($trialRefusal) ?></p>
           <?php endif; ?>
-          <?php if (isset($_SESSION['user_id'])): ?>
+          <?php if (!isset($_SESSION['user_id'])): ?>
+            <a href="/auth/register.php" class="nn-btn nn-btn--secondary nn-btn--block">Start free trial</a>
+          <?php elseif ($trialRefusal === null): ?>
             <form method="post"><?= AuthSecurity::csrfField() ?>
               <input type="hidden" name="subscription_action" value="start_trial">
               <button type="submit" class="nn-btn nn-btn--secondary nn-btn--block">Start free trial</button>
             </form>
-          <?php else: ?>
-            <a href="/auth/register.php" class="nn-btn nn-btn--secondary nn-btn--block">Start free trial</a>
           <?php endif; ?>
         </div>
       </div>
@@ -196,7 +202,8 @@ $pageTitle = "NajmiNet Innovations | Invoicing, VAT & CNSS Payroll Software in M
   </div></div></div>
 </section>
 
-<!-- ============ FINAL CTA ============ -->
+<!-- ============ FINAL CTA (only for visitors who can start the trial) ============ -->
+<?php if ($trialRefusal === null): ?>
 <section class="section pt-0">
   <div class="container">
     <div class="glass final-cta reveal">
@@ -209,5 +216,6 @@ $pageTitle = "NajmiNet Innovations | Invoicing, VAT & CNSS Payroll Software in M
     </div>
   </div>
 </section>
+<?php endif; ?>
 <script src="/assets/js/index.js?v=<?= @filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/js/index.js') ?>"></script>
 <?php include('includes/footer.php'); ?>

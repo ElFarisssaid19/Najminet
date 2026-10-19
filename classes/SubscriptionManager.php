@@ -7,21 +7,72 @@ declare(strict_types=1);
  */
 final class SubscriptionManager
 {
+    public const TRIAL_DAYS = 14;
+
     public function __construct(private PDO $pdo) {}
 
-    /** Starts the one and only 14-day trial for an account. */
+    /**
+     * Starts the one and only 14-day trial for an account. Refused (false) when
+     * the account already used its trial, has ever had a paid plan, or already
+     * has access that lasts longer than the trial: a trial never shortens access.
+     * The checks are part of the UPDATE, so a forced or repeated request can't
+     * get past them. trialRefusal() gives the reason to show.
+     */
     public function startTrial(int $userId): bool
     {
         $statement = $this->pdo->prepare(
             "UPDATE users
              SET plan = 'trial', subscription_status = 'active', trial_used = 1,
                  subscription_start = CURRENT_TIMESTAMP,
-                 subscription_end = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 14 DAY)
-             WHERE id = :user_id AND trial_used = 0"
+                 subscription_end = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL " . self::TRIAL_DAYS . " DAY)
+             WHERE id = :user_id
+               AND trial_used = 0
+               AND (plan IS NULL OR plan <> 'professional')
+               AND NOT EXISTS (SELECT 1 FROM payments WHERE payments.user_id = :payment_user_id AND payments.status = 'COMPLETED')
+               AND NOT (COALESCE(subscription_status, '') = 'active'
+                        AND (subscription_end IS NULL
+                             OR subscription_end > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL " . self::TRIAL_DAYS . " DAY)))"
         );
 
-        $statement->execute([':user_id' => $userId]);
+        $statement->execute([':user_id' => $userId, ':payment_user_id' => $userId]);
         return $statement->rowCount() === 1;
+    }
+
+    /**
+     * Why this account can't start the free trial, as a message for the user,
+     * or null when it can. Same rules as startTrial().
+     */
+    public function trialRefusal(int $userId): ?string
+    {
+        $this->updateExpiredSubscriptions($userId);
+
+        // Compared in SQL, on the database clock, exactly like startTrial().
+        $statement = $this->pdo->prepare(
+            "SELECT trial_used,
+                    (plan = 'professional'
+                     OR EXISTS (SELECT 1 FROM payments WHERE payments.user_id = users.id AND payments.status = 'COMPLETED')) AS has_paid,
+                    (COALESCE(subscription_status, '') = 'active'
+                     AND (subscription_end IS NULL
+                          OR subscription_end > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL " . self::TRIAL_DAYS . " DAY))) AS longer_access
+             FROM users WHERE id = :user_id LIMIT 1"
+        );
+        $statement->execute([':user_id' => $userId]);
+        $user = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($user === false) {
+            return 'Your account could not be found. Please log in again.';
+        }
+        if ((int) $user['has_paid'] === 1) {
+            return 'The free trial is only for accounts that have never had a paid plan.';
+        }
+        if ((int) $user['trial_used'] === 1) {
+            return 'You have already used your free trial.';
+        }
+        if ((int) $user['longer_access'] === 1) {
+            return 'Your current access lasts longer than the free trial, so a trial would shorten it.';
+        }
+
+        return null;
     }
 
     /** Activates or renews Professional for 30 days after confirmed payment. */
@@ -32,7 +83,7 @@ final class SubscriptionManager
     ): bool {
         $statement = $this->pdo->prepare(
             "UPDATE users
-             SET plan = 'professional', subscription_status = 'active',
+             SET plan = 'professional', subscription_status = 'active', trial_used = 1,
                  subscription_start = CURRENT_TIMESTAMP,
                  subscription_end = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 30 DAY),
                  stripe_customer_id = :customer_id,
@@ -79,11 +130,7 @@ final class SubscriptionManager
 
     public function canStartTrial(int $userId): bool
     {
-        $statement = $this->pdo->prepare('SELECT trial_used FROM users WHERE id = :user_id LIMIT 1');
-        $statement->execute([':user_id' => $userId]);
-        $user = $statement->fetch(PDO::FETCH_ASSOC);
-
-        return $user !== false && (int) $user['trial_used'] === 0;
+        return $this->trialRefusal($userId) === null;
     }
 
     public function isSubscriptionActive(int $userId): bool

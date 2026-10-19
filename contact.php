@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/session.php';
 require_once __DIR__ . '/includes/contact_whatsapp.php';
+require_once __DIR__ . '/includes/contact_email.php';
 require_once __DIR__ . '/includes/AuthSecurity.php';
 
 // $contactNotice is set by contact_handler.php when it shows this page again.
@@ -10,6 +11,7 @@ $contactNotice ??= (($_GET['sent'] ?? '') === '1')
 $old = static fn (string $field): string => htmlspecialchars((string) ($contactNotice !== null && !$contactNotice['ok'] ? ($_POST[$field] ?? '') : ''));
 $pageTitle = "Contact Us | NajmiNet Innovations";
 $whatsappUrl = contact_whatsapp_url();
+$contactEmail = contact_email_address();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -99,11 +101,13 @@ $whatsappUrl = contact_whatsapp_url();
           <a href="<?= htmlspecialchars($whatsappUrl) ?>" class="nn-btn nn-btn--secondary" target="_blank" rel="noopener">Chat on WhatsApp<span class="nn-icon nn-icon--external" aria-hidden="true"></span><span class="nn-sr-only"> (opens WhatsApp)</span></a>
         </div>
         <?php endif; ?>
+        <?php if ($contactEmail): ?>
         <div class="glass ticket-card mb-4">
           <div class="icon-badge">✉️</div>
           <h3 class="h5 mb-2">Email</h3>
-          <p class="small mb-0">imad@najminet.com</p>
+          <p class="small mb-0"><?= htmlspecialchars($contactEmail) ?></p>
         </div>
+        <?php endif; ?>
         <div class="glass ticket-card">
           <div class="icon-badge">📍</div>
           <h3 class="h5 mb-2">Location</h3>

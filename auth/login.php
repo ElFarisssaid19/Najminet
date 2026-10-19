@@ -192,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <ul class="decor-list">
           <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Smart invoicing &amp; VAT management</li>
           <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i> CNSS payroll made simple</li>
-          <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Secure, reliable, 24/7 support</li>
+          <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Secure and reliable</li>
         </ul>
         <a href="/auth/register.php" class="nn-btn nn-btn--primary">
           <span class="nn-icon nn-icon--user-plus" aria-hidden="true"></span>Sign up

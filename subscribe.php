@@ -18,9 +18,9 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
-// Reuse the central access-status query used by the subscription middleware.
 $subscriptionManager = new SubscriptionManager($pdo);
-$currentSubscription = $subscriptionManager->getAccessStatus((int) $_SESSION['user_id']);
+// Same rules the trial endpoint enforces (never used a trial, never paid, no longer access already).
+$canStartTrial = $subscriptionManager->canStartTrial((int) $_SESSION['user_id']);
 $subscriptionMessage = $_SESSION['subscription_message'] ?? '';
 unset($_SESSION['subscription_message']);
 
@@ -53,7 +53,7 @@ require __DIR__ . '/includes/sidebar.php';
     <p>Subscribe to regain full access to the NajmiNet dashboard.</p>
 
     <div class="field-row" style="margin:24px 0;">
-      <?php if ((int) ($currentSubscription['trial_used'] ?? 1) === 0): ?>
+      <?php if ($canStartTrial): ?>
         <div class="card" style="padding:18px;">
           <strong>14-Day Free Trial</strong>
           <div style="font-size:24px; margin-top:8px;">Free</div>
